@@ -22,6 +22,7 @@ const CONFIGURATION_FILE string = "config.json"
 type Configuration struct {
   ListenAddress    string
   MqConnString     string
+  RedisAddress     string
 }
 
 
@@ -48,6 +49,7 @@ func parseConfiguration() Configuration {
 }
 
 
+
 // ---------------------------------------------------------------------------------------------------------------------
 
 func main() {
@@ -55,5 +57,8 @@ func main() {
   configuration := parseConfiguration()
 
   connectToMq(configuration.MqConnString)
+  connectToRedis(configuration.RedisAddress)
   startWebServer(configuration.ListenAddress)
+  disconnectMq()
+  disconnectRedis()
 }

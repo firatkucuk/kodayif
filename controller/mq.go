@@ -14,8 +14,9 @@ import "log"
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-var channel *amqp.Channel
-var queue    amqp.Queue
+var connection *amqp.Connection
+var channel    *amqp.Channel
+var queue       amqp.Queue
 
 
 
@@ -90,4 +91,14 @@ func connectToMq(connString string) {
     defer connection.Close()
     log.Fatalf("%s: %s", "Failed to declare a queue", err)
   }
+}
+
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+func disconnectMq() {
+
+  connection.Close()
+  channel.Close()
 }

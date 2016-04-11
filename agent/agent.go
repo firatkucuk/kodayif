@@ -11,6 +11,7 @@ import "fmt"
 import "github.com/streadway/amqp"
 import "io/ioutil"
 import "log"
+import "net"
 import "net/http"
 import "os"
 import "strings"
@@ -20,7 +21,7 @@ import "strings"
 // ---------------------------------------------------------------------------------------------------------------------
 
 const CONFIGURATION_FILE string = "config.json"
-
+var   ipAddress          string
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -68,6 +69,7 @@ type OperationMessage struct {
 type OperationReply struct {
   State            bool
   Uuid             string
+  IpAddress        string
 }
 
 
@@ -77,8 +79,9 @@ type OperationReply struct {
 func reply(controller string, uuid string, state bool) {
 
   operationReply    := OperationReply {
-    State : state,
-    Uuid  : uuid,
+    State     : state,
+    Uuid      : uuid,
+    IpAddress : ipAddress,
   }
   messageBytes, err := json.Marshal(operationReply)
 
@@ -212,9 +215,42 @@ func parseConfiguration() Configuration {
 
 
 
-// ---------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------xx-
+
+func ipLookUp() string {
+
+  interfaces, err := net.Interfaces()
+
+  if err != nil {
+    log.Println("Couln't fetch interface list")
+  }
+
+  for _, i := range interfaces {
+    addrs, _ := i.Addrs()
+
+    for _, addr := range addrs {
+      address := addr.String()
+
+      if address != "127.0.0.1" {
+        return address
+      }
+    }
+  }
+
+  return ""
+}
+
+
+
+// ----------------------------------------------------------------------------------------------------------------xx-
 
 func main() {
+
+  ipAddress = ipLookUp()
+
+  if (ipAddress == "") {
+    log.Fatal("Couldn't find a valid interface address")
+  }
 
   configuration := parseConfiguration()
   connectToMq(configuration.Controller, configuration.MqConnString)

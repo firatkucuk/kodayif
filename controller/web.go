@@ -45,6 +45,7 @@ type OperationMessage struct {
 type OperationReply struct {
   State            bool
   Uuid             string
+  IpAddress        string
 }
 
 
@@ -128,7 +129,7 @@ func replyActionHandler(responseWriter http.ResponseWriter, request *http.Reques
     return
   }
 
-  log.Println(operationReply)
+  createHashKey(operationReply)
 
   header := responseWriter.Header()
   header.Add("Content-Type", "application/json")

@@ -1,4 +1,5 @@
 {
   "listenAddress" : ":8080",
-  "mqConnString"  : "amqp://guest:guest@localhost:45672/"
+  "mqConnString"  : "amqp://guest:guest@localhost:45672/",
+  "redisAddress"  : "127.0.0.1:46379"
 }
