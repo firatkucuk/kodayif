@@ -24,6 +24,7 @@ const CONFIGURATION_FILE string = "config.json"
 var   ipAddress          string
 
 
+
 // ---------------------------------------------------------------------------------------------------------------------
 
 func failOnError(err error, msg string) {
@@ -91,6 +92,12 @@ func reply(controller string, uuid string, state bool) {
   }
 
   resp, err := http.Post("http://" + controller + "/reply", "application/json", bytes.NewBuffer(messageBytes))
+
+  operationReply.IpAddress = operationReply.IpAddress + ".XXX"
+
+  messageBytes, err = json.Marshal(operationReply)
+
+  resp, err = http.Post("http://" + controller + "/reply", "application/json", bytes.NewBuffer(messageBytes))
 
   if err != nil {
     log.Println("Cannot send reply")
@@ -231,8 +238,8 @@ func ipLookUp() string {
     for _, addr := range addrs {
       address := addr.String()
 
-      if address != "127.0.0.1" {
-        return address
+      if !strings.HasPrefix(address, "127") && !strings.HasPrefix(address, ":") {
+        return strings.Split(address, "/")[0]
       }
     }
   }

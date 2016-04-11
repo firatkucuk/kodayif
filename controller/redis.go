@@ -18,6 +18,17 @@ var client *redis.Client
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+func getAllKeys(uuid string) map[string]string {
+
+  allKeys, _ := client.Cmd("HGETALL", uuid).Map()
+
+  return allKeys
+}
+
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 func createHashKey(operationReply OperationReply) {
 
   client.Cmd("HSET", operationReply.Uuid, operationReply.IpAddress, operationReply.State)

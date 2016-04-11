@@ -9,11 +9,46 @@ var OPERATION_FILE_CONTAINS = {id: 2, label: 'File Contains', tag: 'fc'};
 
 // #####################################################################################################################
 
-function kodayifController($scope, $http) {
+function kodayifController($scope, $http, $interval) {
+
+  // ---------------------------------------------------------------------------
+
+  $scope.getServerStatus = function() {
+
+    var req = {
+      method : 'GET',
+      url    : '/status/' + $scope.uuid,
+      timeout: 2000
+    };
+
+    $http(req)
+      .success(function (responseBody) {
+
+        $scope.statusItems = responseBody;
+      })
+      .error(function (responseBody) {
+        // pass
+      });
+  }
+
+  // ---------------------------------------------------------------------------
+
+  $scope.$on('$destroy', function () {
+
+    $interval.cancel($scope.statusFetchInterval);
+    $scope.statusFetchInterval = undefined;
+  });
+
+  // ---------------------------------------------------------------------------
 
   $scope.send = function () {
 
     $scope.operationLock = true;
+
+    if ($scope.statusFetchInterval) {
+      $interval.cancel($scope.statusFetchInterval);
+      $scope.statusFetchInterval = undefined;
+    }
 
     var req = {
       method : 'POST',
@@ -27,19 +62,19 @@ function kodayifController($scope, $http) {
     };
 
     $http(req)
-      .success(function () {
+      .success(function (responseBody) {
 
-        $scope.operationLock = false;
+        $scope.uuid                = responseBody.Uuid;
+        $scope.operationLock       = false;
+        $scope.statusFetchInterval = $interval(function () {
+          $scope.getServerStatus();
+        }, 10000);
+
+        $scope.getServerStatus();
       })
       .error(function (responseBody) {
 
         $scope.operationLock = false;
-
-        // if (responseBody && responseBody.text) {
-        //   $scope.message = responseBody.text;
-        // } else {
-        //   $scope.message = "Couldn't communicate with device.";
-        // }
       });
   }
 
@@ -64,5 +99,5 @@ function kodayifController($scope, $http) {
 
   angular
     .module('kodayifApp', [])
-    .controller('KodayifController', ['$scope', '$http', kodayifController]);
+    .controller('KodayifController', ['$scope', '$http', '$interval', kodayifController]);
 })(window.angular);

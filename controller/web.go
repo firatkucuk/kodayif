@@ -10,6 +10,7 @@ import "errors"
 import "github.com/nu7hatch/gouuid"
 import "log"
 import "net/http"
+import "strings"
 
 
 
@@ -139,6 +140,22 @@ func replyActionHandler(responseWriter http.ResponseWriter, request *http.Reques
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+func statusActionHandler(responseWriter http.ResponseWriter, request *http.Request) {
+
+  uuid    := strings.Split(request.RequestURI, "/")[2]
+  allKeys := getAllKeys(uuid)
+
+  header := responseWriter.Header()
+  header.Add("Content-Type", "application/json")
+
+  encoder := json.NewEncoder(responseWriter)
+  encoder.Encode(allKeys)
+}
+
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 func startWebServer(listenAddress string) {
 
   var fileServer = http.FileServer(http.Dir("static"))
@@ -146,5 +163,6 @@ func startWebServer(listenAddress string) {
 
   http.HandleFunc("/send", sendActionHandler)
   http.HandleFunc("/reply", replyActionHandler)
+  http.HandleFunc("/status/", statusActionHandler)
   http.ListenAndServe(listenAddress, nil)
 }

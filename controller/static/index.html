@@ -30,9 +30,9 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-6 col-sm-offset-3 well">
+        <div class="col-sm-6 col-sm-offset-3">
           <form name="kdfForm" class="form-horizontal" role="form" novalidate="novalidate" ng-submit="send()">
-            <fieldset>
+            <fieldset class="well">
               <div class="form-group form-group-sm">
                 <label for="kdf-operation" class="col-sm-3 control-label">Operation</label>
                 <div class="col-sm-9">
@@ -59,6 +59,23 @@
               </div>
             </fieldset>
           </form>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+          <table class="table table-striped" ng-show="statusItems">
+            <tr>
+              <th>IP</th>
+              <th>Status</th>
+            </tr>
+            <tr ng-repeat="(ip, status) in statusItems">
+              <td>{{ip}}</td>
+              <td>
+                <span ng-show="status === '1'" class="text-success glyphicon glyphicon-ok"></span>
+                <span ng-show="status === '0'" class="text-danger glyphicon glyphicon-remove"></span>
+              </td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
