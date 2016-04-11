@@ -158,15 +158,35 @@ func connectToMq(controller string, mqConnString string) {
   failOnError(err, "Failed to open a channel")
   defer channel.Close()
 
-  queue, err := channel.QueueDeclare(
+  err = channel.ExchangeDeclare(
     "kodayif", // name
-    false,     // durable
-    false,     // delete when usused
-    false,     // exclusive
+    "fanout",  // type
+    true ,     // durable
+    false,     // auto-deleted
+    false,     // internal
     false,     // no-wait
     nil,       // arguments
   )
+  failOnError(err, "Failed to declare an exchange")
+
+  queue, err := channel.QueueDeclare(
+    "",    // name
+    false, // durable
+    false, // delete when usused
+    true,  // exclusive
+    false, // no-wait
+    nil,   // arguments
+  )
   failOnError(err, "Failed to declare a queue")
+
+  err = channel.QueueBind(
+    queue.Name, // queue name
+    "",         // routing key
+    "kodayif",  // exchange
+    false,
+    nil,
+  )
+  failOnError(err, "Failed to bind a queue")
 
   msgs, err := channel.Consume(
     queue.Name, // queue

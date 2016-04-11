@@ -16,7 +16,6 @@ import "log"
 
 var connection *amqp.Connection
 var channel    *amqp.Channel
-var queue       amqp.Queue
 
 
 
@@ -44,8 +43,8 @@ func sendToMq(operationMessage OperationMessage) error {
   }
 
   err = channel.Publish(
-    "",         // exchange
-    queue.Name, // routing key
+    "kodayif",  // exchange
+    "",         // routing key
     false,      // mandatory
     false,      // immediate
     amqp.Publishing {
@@ -77,11 +76,12 @@ func connectToMq(connString string) {
     log.Fatalf("%s: %s", "Failed to open a channel", err)
   }
 
-  queue, err = channel.QueueDeclare(
+  err = channel.ExchangeDeclare(
     "kodayif", // name
-    false,     // durable
-    false,     // delete when unused
-    false,     // exclusive
+    "fanout",  // type
+    true ,     // durable
+    false,     // auto-deleted
+    false,     // internal
     false,     // no-wait
     nil,       // arguments
   )
