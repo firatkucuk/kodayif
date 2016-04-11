@@ -42,6 +42,15 @@ type OperationMessage struct {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+type OperationReply struct {
+  State            bool
+  Uuid             string
+}
+
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 func validate(request *http.Request) (OperationRequest, error) {
 
   decoder          := json.NewDecoder(request.Body)
@@ -108,11 +117,33 @@ func sendActionHandler(responseWriter http.ResponseWriter, request *http.Request
 
 // ---------------------------------------------------------------------------------------------------------------------
 
+func replyActionHandler(responseWriter http.ResponseWriter, request *http.Request) {
+
+  decoder        := json.NewDecoder(request.Body)
+  operationReply := OperationReply{}
+  err            := decoder.Decode(&operationReply)
+
+  if err != nil {
+    responseWriter.WriteHeader(http.StatusBadRequest)
+    return
+  }
+
+  log.Println(operationReply)
+
+  header := responseWriter.Header()
+  header.Add("Content-Type", "application/json")
+}
+
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+
 func startWebServer(listenAddress string) {
 
   var fileServer = http.FileServer(http.Dir("static"))
   http.Handle("/", fileServer)
 
   http.HandleFunc("/send", sendActionHandler)
+  http.HandleFunc("/reply", replyActionHandler)
   http.ListenAndServe(listenAddress, nil)
 }

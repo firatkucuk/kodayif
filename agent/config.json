@@ -1,0 +1,4 @@
+{
+  "controller"   : "localhost:8080",
+  "mqConnString" : "amqp://guest:guest@localhost:45672/"
+}
