@@ -1,0 +1,16 @@
+@font-face {
+  font-family : 'Comfortaa';
+  font-style  : normal;
+  font-weight : 400;
+  src         : local('Comfortaa'), local('Comfortaa-Regular'), url(../fonts/Comfortaa-Regular.ttf);
+}
+
+.kdf-main-container {
+  margin-top : 50px;
+}
+
+.kdf-main-container h1 {
+  font-family : "Comfortaa", Helvetica, Arial, sans-serif;
+  font-size   : 500%;
+  margin      : 20px;
+}

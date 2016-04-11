@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html lang="en" ng-app="kodayifApp">
+  <head>
+    <title>Kodayif</title>
+    <base href="/">
+    <meta charset="utf-8">
+    <meta name="description" content="Kodayif Job Distribution System">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+
+    <!-- Common 3rd party styles -->
+    <link rel="stylesheet" href="styles/angular-csp.css?v1.5.3">
+    <link rel="stylesheet" href="styles/bootstrap.min.css?v3.3.6">
+
+    <!-- Main style files -->
+    <link rel="stylesheet" href="styles/kodayif.css">
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please
+      <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div class="container kdf-main-container" ng-controller="KodayifController">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 text-center">
+          <h1>kodayif</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3 well">
+          <form name="kdfForm" class="form-horizontal" role="form" novalidate="novalidate" ng-submit="send()">
+            <fieldset>
+              <div class="form-group form-group-sm">
+                <label for="kdf-operation" class="col-sm-3 control-label">Operation</label>
+                <div class="col-sm-9">
+                  <select id="kdf-operation" class="form-control" ng-model="formData.operation" ng-options="operation as operation.label for operation in operations track by operation.id" required="" ng-required="true">
+                  </select>
+                </div>
+              </div>
+              <div class="form-group form-group-sm">
+                <label for="kdf-file-path" class="col-sm-3 control-label">File Path</label>
+                <div class="col-sm-9">
+                  <input id="kdf-file-path" type="text" class="form-control" placeholder="File Path" ng-model="formData.filePath" required="" ng-required="true">
+                </div>
+              </div>
+              <div class="form-group form-group-sm" ng-show="formData.operation.tag === 'fc'">
+                <label for="kdf-term" class="col-sm-3 control-label">Term</label>
+                <div class="col-sm-9">
+                  <input id="kdf-term" type="text" class="form-control" placeholder="Term" ng-model="formData.term" required="" ng-required="true">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-3">
+                  <button type="submit" class="btn btn-success" ng-disabled="!kdfForm.$valid">Send to All Servers</button>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="scripts/html5shiv.min.js?v3.7.3"></script>
+    <script src="scripts/respond.min.js?v1.4.2"></script>
+    <script src="scripts//es5-shim.min.js?v4.3.1"></script>
+    <script src="scripts/json3.min.js?v3.3.2"></script>
+    <![endif]-->
+
+    <!-- Common 3rd party scripts -->
+    <script src="scripts/angular.min.js?v1.5.3"></script>
+
+    <!-- Main script files -->
+    <script src="scripts/ng/app.js"></script>
+  </body>
+</html>
