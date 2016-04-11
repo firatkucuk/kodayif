@@ -93,12 +93,6 @@ func reply(controller string, uuid string, state bool) {
 
   resp, err := http.Post("http://" + controller + "/reply", "application/json", bytes.NewBuffer(messageBytes))
 
-  operationReply.IpAddress = operationReply.IpAddress + ".XXX"
-
-  messageBytes, err = json.Marshal(operationReply)
-
-  resp, err = http.Post("http://" + controller + "/reply", "application/json", bytes.NewBuffer(messageBytes))
-
   if err != nil {
     log.Println("Cannot send reply")
   }
